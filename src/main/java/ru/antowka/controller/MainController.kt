@@ -9,15 +9,14 @@ import javafx.scene.control.TableColumn
 import javafx.scene.control.TableView
 import javafx.scene.control.cell.PropertyValueFactory
 import javafx.stage.Stage
-import ru.antowka.model.Article
 import ru.antowka.model.Property
+import ru.antowka.model.habr.Channel
+import ru.antowka.model.habr.Rss
 import java.net.InetSocketAddress
 import java.net.Proxy
 import java.net.URL
-import java.util.Arrays.asList
+import javax.xml.bind.JAXBContext
 import javax.xml.parsers.DocumentBuilderFactory
-import org.w3c.dom.Node
-import org.w3c.dom.NodeList
 
 /**
  * Created by anikanor on 09.06.2017.
@@ -33,10 +32,10 @@ class MainController {
     var taskList: ArrayList<Thread> = ArrayList()
 
     var propertyList: ArrayList<Property> = ArrayList()
-    var propertiesObsrv : ObservableList<Property> = FXCollections.observableList(propertyList)
+    var propertiesObsrv: ObservableList<Property> = FXCollections.observableList(propertyList)
 
-    var articles: ArrayList<Article> = ArrayList()
-    var articlesObsrv: ObservableList<Article> = FXCollections.observableList(articles)
+    var articles: ArrayList<Channel> = ArrayList()
+    var articlesObsrv: ObservableList<Channel> = FXCollections.observableList(articles)
 
     fun initialize(primaryStage: Stage?) {
         name.cellValueFactory = PropertyValueFactory<Property, String>("name")
@@ -44,8 +43,8 @@ class MainController {
         properties.items = propertiesObsrv;
         refresh()
 
-        primaryStage?.setOnCloseRequest{
-            taskList.forEach(fun (task: Thread){
+        primaryStage?.setOnCloseRequest {
+            taskList.forEach(fun(task: Thread) {
                 if (!task.isInterrupted) task.interrupt()
             })
         }
@@ -89,15 +88,10 @@ class MainController {
 
     fun fetchHabrData() {
 
-        val root = DocumentBuilderFactory
-                .newInstance()
-                .newDocumentBuilder()
-                .parse(urlHabr.openConnection(proxy).getInputStream())
+        val jaxbContext = JAXBContext.newInstance(Rss::class.java)
+        val unmarshaller = jaxbContext.createUnmarshaller()
 
-        val items = asList(root.getElementsByTagName("item"))
-        items.forEach(fun (item){
-            val title = (item as ElementImpl).getElementsByTagName("title").item(0)
-            val test = ""
-        })
+        val articles = unmarshaller.unmarshal(urlHabr.openConnection(proxy).getInputStream()) as Rss
+        val test = ""
     }
 }
