@@ -11,10 +11,12 @@ import javafx.scene.control.cell.PropertyValueFactory
 import javafx.stage.Stage
 import ru.antowka.model.Property
 import ru.antowka.model.habr.Channel
+import ru.antowka.model.habr.Item
 import ru.antowka.model.habr.Rss
 import java.net.InetSocketAddress
 import java.net.Proxy
 import java.net.URL
+import java.util.*
 import javax.xml.bind.JAXBContext
 import javax.xml.parsers.DocumentBuilderFactory
 
@@ -26,6 +28,14 @@ class MainController {
     @FXML var name = TableColumn<Property, String>()
     @FXML var value = TableColumn<Property, String>()
     @FXML var properties = TableView<Property>()
+
+    @FXML var title = TableColumn<Property, String>()
+    @FXML var link = TableColumn<Property, String>()
+    @FXML var habrTable = TableView<Item>()
+
+    var habrArticlesList: ArrayList<Item> = ArrayList()
+    var habrArticlesObsrv: ObservableList<Item> = FXCollections.observableList(habrArticlesList)
+
     var urlWheather: URL = URL("http://api.openweathermap.org/data/2.5/weather?id=520555&appid=6b355653425ae248764f197eb0e5b694&mode=xml&units=metric")
     var urlHabr: URL = URL("https://habrahabr.ru/rss/feed/posts/24c2423b61a9a5dbc2e721aa9d8f6e6c/")
     var proxy: Proxy = Proxy(Proxy.Type.HTTP, InetSocketAddress("proxy01.merann.ru", 8080))
@@ -40,7 +50,8 @@ class MainController {
     fun initialize(primaryStage: Stage?) {
         name.cellValueFactory = PropertyValueFactory<Property, String>("name")
         value.cellValueFactory = PropertyValueFactory<Property, String>("value")
-        properties.items = propertiesObsrv;
+        properties.items = propertiesObsrv
+        habrTable.items = habrArticlesObsrv
         refresh()
 
         primaryStage?.setOnCloseRequest {
@@ -91,7 +102,9 @@ class MainController {
         val jaxbContext = JAXBContext.newInstance(Rss::class.java)
         val unmarshaller = jaxbContext.createUnmarshaller()
 
-        val articles = unmarshaller.unmarshal(urlHabr.openConnection(proxy).getInputStream()) as Rss
-        val test = ""
+        val inputStream = urlHabr.openConnection(proxy).getInputStream()
+        val articles = unmarshaller.unmarshal(inputStream) as Rss
+        habrArticlesList.clear()
+        habrArticlesList.addAll(articles.channel.item)
     }
 }

@@ -15,5 +15,12 @@
             <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
          </columnResizePolicy>
       </TableView>
+
+       <TableView fx:id="habrTable" layoutY="124.0" prefHeight="206.0" prefWidth="300.0">
+           <columns>
+               <TableColumn fx:id="title" prefWidth="200.0" text="title" />
+               <TableColumn fx:id="link" prefWidth="130.0" text="link" />
+           </columns>
+       </TableView>
    </children>
 </AnchorPane>
