@@ -16,8 +16,9 @@ class SimpleMonitor : Application() {
         primaryStage?.scene = Scene(load)
         val controller = loader.getController<MainController>()
 
-        controller?.initialize(primaryStage)
-
+        controller?.initialize(primaryStage, hostServices)
+        primaryStage?.isResizable = false
+        primaryStage?.sizeToScene()
         primaryStage?.show()
     }
 

@@ -1,5 +1,6 @@
 package ru.antowka.model.habr
 
+import javafx.scene.control.Hyperlink
 import javax.xml.bind.annotation.*
 
 /**
@@ -7,6 +8,6 @@ import javax.xml.bind.annotation.*
  */
 @XmlType
 @XmlAccessorType(XmlAccessType.FIELD)
-class Item(@XmlElement val title: String, @XmlElement val link: String) {
-    constructor() : this("No parsed", "No parsed")
+class Item(@XmlElement val title: String, @XmlElement val link: String, @XmlTransient var hyperlink: Hyperlink) {
+    constructor() : this("No parsed", "No parsed", Hyperlink("No parsed"))
 }

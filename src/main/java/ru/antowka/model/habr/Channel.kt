@@ -7,6 +7,6 @@ import javax.xml.bind.annotation.*
  */
 @XmlType
 @XmlAccessorType(XmlAccessType.FIELD)
-class Channel(@XmlElement val item: ArrayList<Item>) {
+class Channel(@XmlElement val item: MutableList<Item>) {
     constructor() : this(ArrayList())
 }
