@@ -35,7 +35,7 @@ class MainController {
 
     @FXML var link = TableColumn<Item, Hyperlink>()
     @FXML var habrTable = TableView<Item>()
-    var urlHabr: URL = URL("https://habrahabr.ru/rss/interesting/")
+    var urlHabr: URL = URL("https://habrahabr.ru/rss/best/")
     var habrArticlesObsrv: ObservableList<Item> = FXCollections.observableList(ArrayList())
 
 
